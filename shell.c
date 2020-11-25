@@ -30,6 +30,7 @@ int main(void)
         fflush(stdout);
         parse_input(in, argv);
         pid_t pid = fork();
+        
         //fork failed!
         if (pid < 0)
         {
@@ -38,10 +39,12 @@ int main(void)
         }
         else if (pid == 0)
         {
-            // sarrcpy(argv, last);
+            //this commad traverses $PATH for argv[0]
+            //and provides subsequent flags
             int ret = execvp(argv[0], argv); // Run argv[0] with argv[1..] flagss
             //set foreground
             _BG = 0;
+            //failed to find user command
             if (ret == -1)
                 fprintf(stderr, "%s: command not found\n", argv[0]);
         }
@@ -69,17 +72,23 @@ void parse_input(char *in, char *argv[MAX_LINE])
         exit(0);
     //stop parsing and return 
     if (!strcmp(token, "!!")){
-        // sarrcpy(argv, last);
+        if(!argv[0]) printf("History is empty!\n");
+        else print_argv(argv);
+        //dont parse and return (redo last command)
         return;
     } 
 
     // loop through the string to extract all other tokens
     while (token != NULL)
     {
-        argv[_CNT++] = token;
+        //copy the token to argv
+        //allocating to accomodate token
+        argv[_CNT] = (char*)malloc(strlen(token)* sizeof (char));
+        strcpy(argv[_CNT++], token);
         token = strtok(NULL, " ");
         argv[_CNT] = NULL;
     }
+    //checking for & to run in bg
     for (int i = 0; i < MAX_LINE - 1 && tmp[i]; i++)
         if (tmp[i] == '&' && !tmp[i + 1])
         {
