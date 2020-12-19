@@ -26,11 +26,12 @@ int main(void)
     int __RUN = 1;
     while (__RUN)
     {
-        printf("Hsh~>> ");
-        fflush(stdout);
+        //  H for HAPDD
+        printf("Hsh$ ");
+        // fflush(stdout);
         parse_input(in, argv);
         pid_t pid = fork();
-        
+
         //fork failed!
         if (pid < 0)
         {
@@ -43,7 +44,6 @@ int main(void)
             //and provides subsequent flags
             int ret = execvp(argv[0], argv); // Run argv[0] with argv[1..] flagss
             //set foreground
-            _BG = 0;
             //failed to find user command
             if (ret == -1)
                 fprintf(stderr, "%s: command not found\n", argv[0]);
@@ -51,23 +51,41 @@ int main(void)
         else
         {
             // wait for child
-            wait(NULL);
+            if(!_BG) wait(NULL);
+            else {
+                printf("%d\n", pid);
+        }
             continue;
         }
     }
-
     return 0;
 }
 
 void parse_input(char *in, char *argv[MAX_LINE])
 {
     //strtok modifies stirng
-    char *tmp = in;
+    char *tmp[MAX_LINE];
+    
     scanf("%80[^\n]", in);
     getchar();
+
+    //checking for & to run in bg
+    for (int i = 0; i < strlen(in); i++){
+        if (in[i] == '&' && !in[i + 1])
+        {
+            // removing &
+            //artificially ending the string
+            in[i] = '\0';
+            //setting background 
+            _BG = 1;
+        }
+    }
+
     int _CNT = 0;
     // Extract the first token
     char *token = strtok(in, " ");
+    //sentinals check
+    // refactor
     if (!strcmp(token, "exit()"))
         exit(0);
     //stop parsing and return 
@@ -77,28 +95,22 @@ void parse_input(char *in, char *argv[MAX_LINE])
         //dont parse and return (redo last command)
         return;
     } 
-
     // loop through the string to extract all other tokens
     while (token != NULL)
     {
-        //copy the token to argv
-        //allocating to accomodate token
+        // free strings from previous cycles to prevent leaks
+        free(argv[_CNT]);
+        // copy the token to argv
+        // allocating to accomodate token
         argv[_CNT] = (char*)malloc(strlen(token)* sizeof (char));
         strcpy(argv[_CNT++], token);
         token = strtok(NULL, " ");
         argv[_CNT] = NULL;
+        
     }
-    //checking for & to run in bg
-    for (int i = 0; i < MAX_LINE - 1 && tmp[i]; i++)
-        if (tmp[i] == '&' && !tmp[i + 1])
-        {
-            //artificially ending the string
-            tmp[i] = '\0';
-            //setting background flag to true
-            _BG = 1;
-        }
-}
 
+}
+// print command again after history exec
 void print_argv(char *argv[MAX_LINE])
 {
     for (size_t i = 0; i < MAX_LINE - 1; i++){
@@ -111,3 +123,15 @@ void print_argv(char *argv[MAX_LINE])
         }
     }
 }
+
+/*
+        TODO
+    process communication to send bg
+    refactor excecution to fn
+    check for redirect -- strsep
+    add redierct 
+    test 
+    add pipe
+
+    Add 7aniaka
+*/
