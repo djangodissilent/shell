@@ -1,3 +1,7 @@
+#ifndef HELPERS_H
+
+#define HELPERS_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,13 +10,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-
-
-/*
- * This is free and unencumbered software released into the public domain.
- *
- * For more information, please refer to <https://unlicense.org>
- */
+#include <time.h>
 
 //Regular text
 #define BLK "\e[0;30m"
@@ -54,7 +52,7 @@
 #define CYNB "\e[46m"
 #define WHTB "\e[47m"
 
-//High intensty background 
+//High intensty background
 #define BLKHB "\e[0;100m"
 #define REDHB "\e[0;101m"
 #define GRNHB "\e[0;102m"
@@ -83,50 +81,17 @@
 #define BHMAG "\e[1;95m"
 #define BHCYN "\e[1;96m"
 #define BHWHT "\e[1;97m"
-
-//Reset
 #define reset "\e[0m"
 
-
-#include <stdio.h>
-#include <time.h>
-
-int main(void){
-	        char CWD[1024];
-        getcwd(CWD, sizeof(CWD));
-	        char hName[1024];
-    gethostname(hName, sizeof hName);
-
-
-//   time_t rawtime;
-//   struct tm * timeinfo;
-
-//   time ( &rawtime );
-//   timeinfo = localtime ( &rawtime );
-
-
-    
-    // printf(BHRED"%s" RESET BHGRN@ RESET BHCYN%sRESET [%s]\n>> ", getenv("USER"), CWD, __TIME__);
-    printf(BHBLU"%s", getenv("USER"));
-    printf("@" reset);
-    printf(BMAG"[%s]:", hName);
-    printf(reset);
-    printf(BGRN"~%s ", CWD);
-    printf(reset);
-    printf(RED" [%s]\n", __TIME__);
-    printf(reset);
-    printf(reset  BHBLU">" reset);
-    printf(reset  BHBLU">" reset);
-    printf(reset  BHBLU"> " reset);
-
-    puts("\n\n\n\n");
+#define MAX_LINE 80 /* The maximum length command */
 
 
 
-	// printf(BHBLK "Hey this is the color red, and it's bold! \n" reset);
-	// printf(BRED "Hey this is the color red, and it's bold! \n" reset);
-	// printf(RED "If" BLU "you" YEL "are" GRN "bored" CYN "do" MAG "this! \n" reset); 
-	// printf(BRED "If" BBLU "you" BYEL "are" BGRN "bored" BCYN "do" BMAG "this! \n" reset); 
-	// printf(URED "If" UBLU "you" UYEL "are" UGRN "bored" UCYN "do" UMAG "this! \n" reset);
-    return 0;
-}
+char *parse_input(char *in, char *argv[MAX_LINE], char *args[MAX_LINE], int REDIRECT_FLAGS[]);
+void print_argv(char *argv[MAX_LINE]);
+// void sarrcpy(char *last[MAX_LINE], char *argv[]);
+char *checkRedirect(int REDIRECT_FLAGS[], char *in, char *args[]);
+char **toArgv(char *in, char *args[MAX_LINE]);
+void prompt();
+int execute(char *argv[MAX_LINE], char *args[MAX_LINE], int REDIRECT_FLAGS[3], char *in);
+#endif
