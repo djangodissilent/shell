@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+
 /*
  * This is free and unencumbered software released into the public domain.
  *
@@ -88,21 +89,37 @@
 
 
 #include <stdio.h>
+#include <time.h>
 
-int main(){
+int main(void){
 	        char CWD[1024];
         getcwd(CWD, sizeof(CWD));
+	        char hName[1024];
+    gethostname(hName, sizeof hName);
 
+
+//   time_t rawtime;
+//   struct tm * timeinfo;
+
+//   time ( &rawtime );
+//   timeinfo = localtime ( &rawtime );
+
+
+    
     // printf(BHRED"%s" RESET BHGRN@ RESET BHCYN%sRESET [%s]\n>> ", getenv("USER"), CWD, __TIME__);
-    printf(BHRED"%s", getenv("USER"));
-    printf(reset BMAG"@" reset);
-    printf(BHCYN"%s ", CWD);
+    printf(BHBLU"%s", getenv("USER"));
+    printf("@" reset);
+    printf(BMAG"[%s]:", hName);
     printf(reset);
-    printf(RED"[%s]\n", __TIME__);
+    printf(BGRN"~%s ", CWD);
+    printf(reset);
+    printf(RED" [%s]\n", __TIME__);
     printf(reset);
     printf(reset  BHBLU">" reset);
     printf(reset  BHBLU">" reset);
     printf(reset  BHBLU"> " reset);
+
+    puts("\n\n\n\n");
 
 
 
