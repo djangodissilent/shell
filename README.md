@@ -1,9 +1,11 @@
 # Hsh
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 
 A Minimalist Unix-Based shell written in C.
 
 ### Features
-
 - [x] **Code Execution** [binaries in /bin the $PATH generally]
     ![Alt text](execution/cmatrix.png?raw=true "Title")
   
@@ -28,4 +30,4 @@ A Minimalist Unix-Based shell written in C.
 ![Alt text](execution/Redirection.png?raw=true "Title")
 ![Alt text](execution/pipe.png?raw=true "Title")
 
-**Happy Hacking✔🎈**
+**Happy Hacking✔**
